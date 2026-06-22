@@ -222,7 +222,7 @@ impl<'a, 'c, 's> CompareCtx<'a, 'c, 's> {
     }
 }
 
-/// Similar to `Comparator.Compare.definitionHoleMatches` from Comparator (note nanoda does not record `safety`).
+/// Similar to `Comparator.definitionHoleMatches` from Comparator (note nanoda does not record `safety`).
 pub fn definition_hole_matches<'c, 's>(
     c: &ExportFile<'c>,
     hc: &DeclarInfo<'c>,
@@ -232,7 +232,7 @@ pub fn definition_hole_matches<'c, 's>(
     declar_info_equal(c, hc, s, hs)
 }
 
-/// Same as `Comparator.Compare.compareAt` from Comparator.
+/// Same as `Comparator.compareAt` from Comparator.
 pub fn compare_at<'c, 's>(
     challenge: &ExportFile<'c>,
     solution: &ExportFile<'s>,
