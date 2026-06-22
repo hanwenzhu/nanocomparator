@@ -1,0 +1,26 @@
+[package]
+name = "nanocomparator"
+version = "0.1.0"
+edition = "2024"
+license = "Apache-2.0"
+description = "A pure-Rust reimplementation of Lean's Comparator built on nanoda."
+
+[dependencies]
+nanoda_lib = { git = "https://github.com/hanwenzhu/nanoda_lib.git", branch = "nanocomparator" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+# Match versions of nanoda's dependencies.
+num-bigint = { version = "0.4.4", features = ["serde"] }
+rustc-hash = "1.1.0"
+
+[[bin]]
+name = "nanocomparator"
+path = "src/main.rs"
+
+[lib]
+name = "nanocomparator"
+path = "src/lib.rs"
+
+[profile.release]
+opt-level = 3
+overflow-checks = true
