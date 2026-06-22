@@ -67,9 +67,9 @@ There are notable divergences:
   the transitive dependencies of the targets. This should be fine if only transitive dependencies are exported anyway.
 - The export files are produced by the user prior to running Nanocomparator. Unlike Comparator, this is not done by Nanocomparator.
   Depending on the threat model, this could be:
-  - The submitter submits `.lean` files, and the challenger exports them by a `lake build` + `lean4export`
+  - The submitter submits `.lean` files, and the checker exports them by a `lake build` + `lean4export`
     wrapped in a suitable `landrun`, like in Comparator.
-  - The submitter is responsible for exporting its solution, and the challenger only sees the exported solution.
+  - The submitter is responsible for exporting its solution, and the checker only sees the exported solution.
 
 ## Testing
 
