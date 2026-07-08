@@ -40,9 +40,6 @@ lake env /path/to/lean4export Challenge -- \
   Nat.land Nat.lor Nat.xor Nat.shiftLeft Nat.shiftRight String.ofList \
   my_theorem my_def_hole \
   > challenge.export
-
-# Alternatively, export everything:
-lake env /path/to/lean4export Challenge > challenge.export
 ```
 
 ## Nanocomparator vs Comparator
