@@ -30,11 +30,12 @@ of the challenge and solution environments, respectively.
 
 Export files are produced by [`lean4export`](https://github.com/leanprover/lean4export). The
 export must include the theorems, definition holes, permitted axioms, and the kernel
-built-ins, such as [here](https://github.com/leanprover/comparator/blob/1b82ba006811f7e25d53858252372e4d85fd3921/Main.lean#L258-L259). For example:
+built-ins, such as [here](https://github.com/leanprover/comparator/blob/32bd61da1d68fbaa310234964e9b820b03a0f82f/Main.lean#L245-L277). For example:
 
 ```sh
 lake env /path/to/lean4export Challenge -- \
-  Nat String String.mk Char Char.ofNat List Quot Quot.mk Quot.lift Quot.ind \
+  Nat String String.mk Char Char.ofNat List eagerReduce \
+  optParam autoParam semiOutParam outParam Quot Quot.mk Quot.lift Quot.ind \
   propext Quot.sound Classical.choice \
   Nat.add Nat.sub Nat.mul Nat.pow Nat.gcd Nat.div Nat.mod Nat.beq Nat.ble \
   Nat.land Nat.lor Nat.xor Nat.shiftLeft Nat.shiftRight String.ofList \
@@ -47,7 +48,8 @@ lake env /path/to/lean4export Challenge -- \
 Nanocomparator tries to recreate the logic of Comparator while re-using utilities from nanoda.
 
 - The file [`src/compare.rs`](src/compare.rs) contains a line-by-line translation of Comparator's
-Compare.lean (as of writing).
+[Compare.lean](https://github.com/leanprover/comparator/blob/32bd61da1d68fbaa310234964e9b820b03a0f82f/Comparator/Compare.lean)
+as of September 16, 2026.
 - The file [`src/eq.rs`](src/eq.rs) contains a translation of the Lean kernel's `lean_expr_eqv`.
 
 There are notable divergences:
