@@ -1,7 +1,7 @@
 //! A translation of `Comparator/Compare.lean`.
 
 use crate::eq::{declar_equal, declar_info_equal};
-use crate::util::{new_fx_hash_set, FxHashSet};
+use crate::util::{FxHashSet, new_fx_hash_set};
 use nanoda_lib::env::{Declar, DeclarInfo};
 use nanoda_lib::expr::Expr;
 use nanoda_lib::util::{ExportFile, ExprPtr, NamePtr};
@@ -25,6 +25,17 @@ pub const PRIMITIVE_TARGETS: &[&str] = &[
     "Nat.shiftLeft",
     "Nat.shiftRight",
     "String.ofList",
+    "Char.ofNat",
+    "List",
+    "eagerReduce",
+    "Nat",
+    "String",
+    "String.mk",
+    "Char",
+    "optParam",
+    "autoParam",
+    "semiOutParam",
+    "outParam",
 ];
 
 /// Same as `Lean.ConstantInfo.value?`
@@ -163,7 +174,8 @@ pub fn run_for_used_constants_pair<'c, 's, F>(
 struct CompareCtx<'a, 'c, 's> {
     challenge: &'a ExportFile<'c>,
     solution: &'a ExportFile<'s>,
-    definition_targets: FxHashSet<NamePtr<'c>>,
+    definition_targets: FxHashSet<NamePtr<'s>>,
+    theorem_targets: FxHashSet<NamePtr<'s>>,
     worklist: Vec<NamePair<'c, 's>>,
     checked: FxHashSet<NamePtr<'c>>,
 }
@@ -199,7 +211,7 @@ impl<'a, 'c, 's> CompareCtx<'a, 'c, 's> {
                 return Err(format!("Const not found in solution '{target}'"));
             };
 
-            if self.definition_targets.contains(&tc) {
+            if self.definition_targets.contains(&ts) || self.theorem_targets.contains(&ts) {
                 for pair in get_used_constants_pair(
                     self.challenge,
                     challenge_const.info().ty,
@@ -252,12 +264,13 @@ pub fn compare_at<'c, 's>(
         worklist.push((cn, sn));
     }
 
+    let mut theorem_target_ptrs: FxHashSet<NamePtr<'s>> = new_fx_hash_set();
     for target in theorem_targets {
         let Some((_, challenge_const)) = find_const_from_str(challenge, target) else {
             return Err(format!("Const not found in challenge: '{target}'"));
         };
 
-        let Some((_, solution_const)) = find_const_from_str(solution, target) else {
+        let Some((sn, solution_const)) = find_const_from_str(solution, target) else {
             return Err(format!("Const not found in solution: '{target}'"));
         };
 
@@ -275,9 +288,10 @@ pub fn compare_at<'c, 's>(
         for pair in get_used_constants_pair(challenge, challenge_const.ty, solution, solution_const.ty) {
             worklist.push(pair);
         }
+        theorem_target_ptrs.insert(sn);
     }
 
-    let mut definition_target_ptrs: FxHashSet<NamePtr<'c>> = new_fx_hash_set();
+    let mut definition_target_ptrs: FxHashSet<NamePtr<'s>> = new_fx_hash_set();
     for target in definition_targets {
         let Some((cn, challenge_const)) = find_const_from_str(challenge, target) else {
             return Err(format!("Const not found in challenge: '{target}'"));
@@ -296,10 +310,12 @@ pub fn compare_at<'c, 's>(
             return Err(format!("Const does not match between challenge and target '{target}'"));
         }
 
-        definition_target_ptrs.insert(cn);
+        definition_target_ptrs.insert(sn);
         worklist.push((cn, sn));
     }
 
     let definition_targets = definition_target_ptrs;
-    CompareCtx { challenge, solution, definition_targets, worklist, checked: new_fx_hash_set() }.loop_()
+    let theorem_targets = theorem_target_ptrs;
+    CompareCtx { challenge, solution, definition_targets, theorem_targets, worklist, checked: new_fx_hash_set() }
+        .loop_()
 }
