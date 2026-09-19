@@ -55,8 +55,8 @@ dependencies = [
 
 [[package]]
 name = "nanoda_lib"
-version = "0.4.10-beta"
-source = "git+https://github.com/hanwenzhu/nanoda_lib.git?branch=nanocomparator#e8d4f930d8a3a962a7884565d6d03aba1bb0aaf3"
+version = "0.4.17"
+source = "git+https://github.com/hanwenzhu/nanoda_lib.git?branch=nanocomparator#b4e13fa6c17484feee3043be1f6fabe6f307eb6d"
 dependencies = [
  "indexmap",
  "num-bigint",
